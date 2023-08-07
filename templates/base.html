@@ -35,7 +35,7 @@
 
         <!--mobile navbar - sourced from materialize-->
         <ul class="sidenav" id="mobile-nav-bar">
-            <li><a href="{{ url_for('get_recipes') }}" id="mobile-logo">Gather</a></li>
+            <li><a href="{{ url_for('get_recipes') }}" id="mobile-logo">Recipe Journal</a></li>
             {% if session.user %}
                 <li><a href="{{ url_for('get_recipes') }}">Find Recipes</a></li>
                 <li><a href="">My Recipes</a></li>
@@ -46,6 +46,17 @@
             {% endif %}
         </ul>
 	</header>
+
+    <div>
+        <div class="container">
+            <!--flash message-->
+            {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
+            <div class="row flashes">
+                <h4 class="center-align">{{ message }}</h4>
+            </div>
+            {% endfor %} {% endif %} {% endwith %}
+        </div>
+    </div>
 
     <main class="container">
         {% block content %}
