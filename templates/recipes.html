@@ -15,16 +15,17 @@
                     {% endif %}
                 </div>
                 <div class="col s9">
-                    <strong>{{ recipe.recipe_name }}</strong> Serves (number of people): {{ recipe.serves }}
+                    <strong>{{ recipe.recipe_name }}</strong> : {{ recipe.cuisine_name }}
                     {% if recipe.is_vegetarian == "on" %}
                         <i class="fas fa-exclamation-circle light-blue-text text-lighten-2 tooltipped"
-                            data-position="right" data-tooltip="Vegetarian"></i>
+                            data-position="right" data-tooltip="URGENT!"></i>
                     {% endif %}
                 </div>
             </div>
             <div class="collapsible-body">
-                <strong>{{ recipe.recipe_ingredients }}</strong>
-                <p>{{ recipe.recipe_serves }}</p>
+                <strong> Amount of people this recipe serves: {{ recipe.recipe_serves }}</strong>
+                <p>Recipe ingredients: {{ recipe.recipe_ingredients }}</p>
+                <p>Created by: <em>{{ recipe.created_by }}</em></p>
             </div>
         </li>
         {% endfor %}
