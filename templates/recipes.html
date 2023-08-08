@@ -11,10 +11,11 @@
                     <i class="fas fa-caret-down"></i>
                     {% if session.user|lower == recipe.created_by|lower %}
                         <a href="{{ url_for('edit_recipe', recipe_id=recipe._id) }}" class="btn-small light-blue lighten-1">Edit</a>
+                        <a href="{{ url_for('delete_recipe', recipe_id=recipe._id) }}" class="btn-small light-blue lighten-1">Delete</a>
                     {% endif %}
                 </div>
                 <div class="col s9">
-                    <strong>{{ recipe.recipe_name }}</strong> : {{ recipe.serves }}
+                    <strong>{{ recipe.recipe_name }}</strong> Serves (number of people): {{ recipe.serves }}
                     {% if recipe.is_vegetarian == "on" %}
                         <i class="fas fa-exclamation-circle light-blue-text text-lighten-2 tooltipped"
                             data-position="right" data-tooltip="Vegetarian"></i>
