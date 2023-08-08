@@ -1,42 +1,31 @@
-{% extends "base.html "%}
+{% extends "base.html" %}
 {% block content %}
 
-    <h3 class="light-green-text text-darken-4 center-align">All Recipes viewable</h3>
+    <h3 class="light-blue-text text-darken-4 center-align">All Recipes</h3>
 
-
-    
-    <div class="row">
-        {% if recipes|length > 0 %}
-            {% for recipe in recipes %}
-
-            <div class="col s12 m6 xl4">
-                <div class="card hoverable">
-                    <div class="card-image">
-                        <a class="btn-floating halfway-fab waves-effect waves-light gather-colour activator tooltipped" data-position="bottom" data-tooltip="Quick View"><i class="fa-solid fa-magnifying-glass"></i></a>
-                    </div>
-                    <div class="card-content">
-                        <h5><span class="card-title">{{recipe.recipe_name}}</span></h5>
-                        <p class="card-preview">By {{recipe.author}}</p>
-                        <div class="array-string card-preview">Tags: {{recipe.tags}}</div>
-                    </div>
-                    <div class="card-reveal">
-                        <span class="card-title grey-text text-darken-4"><i class="fa-solid fa-xmark right"></i>{{recipe.recipe_name}}</span>
-                        <p>Servings: {{recipe.serves}}</p>
-                        <p>Takes: {{recipe.duration}} minutes</p>
-                        <p>Difficulty Level: {{recipe.difficulty}}</p>
-                        <h6>Ingredients</h6>
-                        <div class="string-to-array">{{recipe.ingrediant_list}}</div>
-                        <h6>Steps:</h6>
-                        <div class="steps-string-to-array">{{recipe.instructions}}</div>
-                        <p>URL: <a href="{{recipe.url}}" target="_blank">{{recipe.url}}</a></p>
-                    </div>
+    <ul class="collapsible">
+        {% for recipe in recipes %}
+        <li>
+            <div class="collapsible-header white-text light-blue darken-4 text-shadow">
+                <div class="col s3">
+                    <i class="fas fa-caret-down"></i>
+                    {% if session.user|lower == recipe.author|lower %}
+                    {% endif %}
+                </div>
+                <div class="col s9">
+                    <strong>{{ recipe.recipe_name }}</strong> : {{ recipe.serves }}
+                    {% if recipe.is_vegetarian == "on" %}
+                        <i class="fas fa-exclamation-circle light-blue-text text-lighten-2 tooltipped"
+                            data-position="right" data-tooltip="Vegetarian"></i>
+                    {% endif %}
                 </div>
             </div>
-
-            {% endfor %}
-        {% else %}
-            <p class="center-align">Oops, no results found! Reset the search and try again</p>
-        {% endif %}
-    </div>
+            <div class="collapsible-body">
+                <strong>{{ recipe.ingredients }}</strong>
+                <p>{{ recipe.duration }}</p>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
 
 {% endblock %}

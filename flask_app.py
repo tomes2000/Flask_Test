@@ -87,6 +87,32 @@ def logout():
     return redirect(url_for("login"))
 
 
+@app.route("/add_recipe", methods=["GET", "POST"])
+def add_recipe():
+    if request.method == "POST":
+        is_vegetarian = "on" if request.form.get("is_vegetarian") else "off"
+        recipe = {
+            "recipe_name": request.form.get("recipe_name"),
+            "cuisine_name": request.form.get("cuisine_name"),
+            "instructions": request.form.get("instructions"),
+            "author": session["user"],
+            "serves": request.form.get("serves"),
+            "difficulty": request.form.get("difficulty"),
+            "is_vegetarian": is_vegetarian,
+            "duration": request.form.get("duration"),
+            "ingredients": request.form.get("ingredients"),
+            "url": request.form.get("url")
+        }
+        mongo.db.recipes.insert_one(recipe)
+        flash("Recipe Successfully Added")
+        return redirect(url_for("get_recipes"))
+    
+    cuisine = mongo.db.cuisine.find().sort("cuisine_name", 1)
+    return render_template("add_recipe.html", cuisine=cuisine)
+     
+
+
+
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),
