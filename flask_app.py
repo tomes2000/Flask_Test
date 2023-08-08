@@ -25,6 +25,7 @@ def get_recipes():
     return render_template("recipes.html", recipes=recipes)
 
 
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -45,7 +46,7 @@ def register():
         # put the new user into 'session' cookie
         session["user"] = request.form.get("username").lower()
         flash("Registration Successful!")
-        return redirect(url_for("get_recipes"))
+        return redirect(url_for("profile", username=session["user"]))
 
     return render_template("register.html")
 
@@ -65,7 +66,7 @@ def login():
                         flash("Welcome, {}".format(
                             request.form.get("username")))
                         return redirect(url_for(
-                            "get_recipes"))
+                            "profile", username=session["user"]))
             else:
                 # invalid password match
                 flash("Incorrect Username and/or Password")
@@ -75,8 +76,21 @@ def login():
             # username doesn't exist
             flash("Incorrect Username and/or Password")
             return redirect(url_for("login"))
-
+    
     return render_template("login.html")
+
+
+
+@app.route("/profile/<username>", methods=["GET", "POST"])
+def profile(username):
+    # grab the session user's username from db
+    username = mongo.db.users.find_one(
+        {"username": session["user"]})["username"]
+
+    if session["user"]:
+        return render_template("profile.html", username=username)
+
+    return redirect(url_for("login"))
 
 
 @app.route("/logout")
@@ -87,30 +101,52 @@ def logout():
     return redirect(url_for("login"))
 
 
+
 @app.route("/add_recipe", methods=["GET", "POST"])
 def add_recipe():
     if request.method == "POST":
         is_vegetarian = "on" if request.form.get("is_vegetarian") else "off"
         recipe = {
-            "recipe_name": request.form.get("recipe_name"),
             "cuisine_name": request.form.get("cuisine_name"),
-            "instructions": request.form.get("instructions"),
-            "author": session["user"],
-            "serves": request.form.get("serves"),
-            "difficulty": request.form.get("difficulty"),
+            "recipe_name": request.form.get("recipe_name"),
+            "recipe_ingredients": request.form.get("recipe_ingredients"),
             "is_vegetarian": is_vegetarian,
-            "duration": request.form.get("duration"),
-            "ingredients": request.form.get("ingredients"),
-            "url": request.form.get("url")
+            "recipe_serves": request.form.get("recipe_serves"),
+            "created_by": session["user"]
         }
         mongo.db.recipes.insert_one(recipe)
         flash("Recipe Successfully Added")
         return redirect(url_for("get_recipes"))
-    
-    cuisine = mongo.db.cuisine.find().sort("cuisine_name", 1)
-    return render_template("add_recipe.html", cuisine=cuisine)
-     
+    cuisines = mongo.db.cuisines.find().sort("cuisine_name", 1)
+    return render_template("add_recipe.html", cuisines=cuisines)
 
+
+@app.route("/edit_recipe/<recipe_id>", methods=["GET", "POST"])
+def edit_recipe(recipe_id):
+    if request.method == "POST":
+        is_vegetarian = "on" if request.form.get("is_vegetarian") else "off"
+        submit = {
+            "cuisine_name": request.form.get("cuisine_name"),
+            "recipe_name": request.form.get("recipe_name"),
+            "recipe_ingredients": request.form.get("recipe_ingredients"),
+            "is_vegetarian": is_vegetarian,
+            "recipe_serves": request.form.get("recipe_serves"),
+            "created_by": session["user"]
+        }
+        mongo.db.recipes.replace_one({"_id": ObjectId(recipe_id)}, submit)
+        flash("Recipe Successfully Updated")
+
+    recipe = mongo.db.recipes.find_one({"_id": ObjectId(recipe_id)})
+    cuisines = mongo.db.cuisines.find().sort("cuisine_name", 1)
+    return render_template("edit_recipe.html", recipe=recipe, cuisines=cuisines)
+
+
+@app.route("/delete_recipe/<recipe_id>")
+def delete_recipe(recipe_id):
+    # .remove() is deprecated, use .delete_one() instead
+    mongo.db.recipes.delete_one({"_id": ObjectId(recipe_id)})
+    flash("Recipe Successfully Deleted")
+    return redirect(url_for("get_recipes"))
 
 
 if __name__ == "__main__":
