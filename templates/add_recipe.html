@@ -52,9 +52,18 @@
             <!-- Serves -->
              <div class="row">
                 <div class="input-field col s12">
-                    <i class="fas fa-solid fa-people-group prefix light-blue-text text-darken-4"></i>
+                    <i class="fas fa-solid fa-person prefix light-blue-text text-darken-4"></i>
                     <input id="recipe_serves" name="recipe_serves" type="number" class="validate" min="1" max="1000" required>
                     <label for="recipe_serves">Recipe Serves</label>
+                </div>
+            </div>
+            <!-- Ingredients -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <i class="fas fa-solid fa-link prefix light-blue-text text-darken-4"></i>
+                    <textarea placeholder="www.google.com"  id="recipe_url" name="recipe_url"
+                        maxlength="80" class="materialize-textarea validate" required></textarea>
+                    <label for="recipe_url">Recipe Cooking Instructions Link</label>
                 </div>
             </div>
             <!-- Submit button -->

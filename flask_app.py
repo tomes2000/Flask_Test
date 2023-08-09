@@ -112,6 +112,7 @@ def add_recipe():
             "recipe_ingredients": request.form.get("recipe_ingredients"),
             "is_vegetarian": is_vegetarian,
             "recipe_serves": request.form.get("recipe_serves"),
+            "recipe_url": request.form.get("recipe_url"),
             "created_by": session["user"]
         }
         mongo.db.recipes.insert_one(recipe)
@@ -131,6 +132,7 @@ def edit_recipe(recipe_id):
             "recipe_ingredients": request.form.get("recipe_ingredients"),
             "is_vegetarian": is_vegetarian,
             "recipe_serves": request.form.get("recipe_serves"),
+            "recipe_url": request.form.get("recipe_url"),
             "created_by": session["user"]
         }
         mongo.db.recipes.replace_one({"_id": ObjectId(recipe_id)}, submit)
