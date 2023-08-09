@@ -25,7 +25,7 @@
             <div class="collapsible-body">
                 <strong> Amount of people this recipe serves: {{ recipe.recipe_serves }}</strong>
                 <p>Recipe ingredients: {{ recipe.recipe_ingredients }}</p>
-                <p>Link to recipe: {{ recipe.recipe_url }}</p>
+                <p>Link to recipe: <a href="{{recipe.recipe_url}}" target="_blank">{{ recipe.recipe_url }}</a></p>
                 <p>Created by: <em>{{ recipe.created_by }}</em></p>
             </div>
         </li>
